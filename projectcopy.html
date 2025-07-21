@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Name Generator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            color: #333;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .input-section {
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 15px 20px;
+            font-size: 1.2em;
+            border: 2px solid #e1e5e9;
+            border-radius: 12px;
+            outline: none;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .input-group input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .generate-btn {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.2em;
+            font-weight: 600;
+            color: white;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .generate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .generate-btn:active {
+            transform: translateY(0);
+        }
+
+        .results-section {
+            margin-top: 30px;
+        }
+
+        .results-title {
+            font-size: 1.5em;
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .results-grid {
+            display: grid;
+            gap: 15px;
+        }
+
+        .result-item {
+            background: white;
+            border: 2px solid #f0f0f0;
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .result-item:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .result-text {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #333;
+            flex: 1;
+            user-select: all;
+        }
+
+        .copy-btn {
+            padding: 8px 16px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-left: 15px;
+        }
+
+        .copy-btn:hover {
+            background: #5a6fd8;
+        }
+
+        .copy-btn.copied {
+            background: #28a745;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .example-section {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            border-left: 4px solid #667eea;
+        }
+
+        .example-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .example-text {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .result-item {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+            
+            .copy-btn {
+                margin-left: 0;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 Product Name Generator</h1>
+            <p>ใส่ชื่อสินค้า แล้วได้ชื่อหลายแบบให้เลือกใช้</p>
+        </div>
+
+        <div class="input-section">
+            <div class="input-group">
+                <input type="text" id="productInput" placeholder="ใส่ชื่อสินค้า เช่น SCOOP, APPLE, CAR_RACING">
+            </div>
+            <button class="generate-btn" onclick="generateNames()">
+                ✨ สร้างชื่อสินค้า
+            </button>
+        </div>
+
+        <div class="example-section">
+            <div class="example-title">💡 ตัวอย่าง:</div>
+            <div class="example-text">
+                ถ้าใส่ "SCOOP" จะได้: SCOOP IMAGE, SCOOP 3D MAX, SCOOP 3D DWG<br>
+                ถ้าใส่ "CAR_RACING" จะได้: CAR RACING IMAGE, CAR RACING 3D MAX, CAR RACING 3D DWG
+            </div>
+        </div>
+
+        <div id="resultsSection" class="results-section hidden">
+            <div class="results-title">📋 ผลลัพธ์</div>
+            <div id="resultsGrid" class="results-grid"></div>
+        </div>
+    </div>
+
+    <script>
+        const suffixes = [
+            'IMAGE',
+            '3D MAX',
+            '3D DWG',
+            
+        ];
+
+        function generateNames() {
+            const input = document.getElementById('productInput').value.trim();
+            
+            if (!input) {
+                alert('กรุณาใส่ชื่อสินค้า');
+                return;
+            }
+
+            // แปลง _ เป็น space และทำให้เป็น uppercase
+            const cleanName = input.replace(/_/g, ' ').toUpperCase();
+            
+            // สร้างชื่อใหม่
+            const generatedNames = suffixes.map(suffix => `${cleanName} ${suffix}`);
+            
+            // แสดงผลลัพธ์
+            displayResults(generatedNames);
+        }
+
+        function displayResults(names) {
+            const resultsSection = document.getElementById('resultsSection');
+            const resultsGrid = document.getElementById('resultsGrid');
+            
+            // เคลียร์ผลลัพธ์เก่า
+            resultsGrid.innerHTML = '';
+            
+            // สร้าง elements ใหม่
+            names.forEach((name, index) => {
+                const resultItem = document.createElement('div');
+                resultItem.className = 'result-item fade-in';
+                resultItem.style.animationDelay = `${index * 0.1}s`;
+                
+                resultItem.innerHTML = `
+                    <div class="result-text">${name}</div>
+                    <button class="copy-btn" onclick="copyToClipboard('${name}', this)">
+                        📋 Copy
+                    </button>
+                `;
+                
+                // เพิ่ม click event สำหรับ copy ทั้ง item
+                resultItem.addEventListener('click', (e) => {
+                    if (!e.target.classList.contains('copy-btn')) {
+                        copyToClipboard(name, resultItem.querySelector('.copy-btn'));
+                    }
+                });
+                
+                resultsGrid.appendChild(resultItem);
+            });
+            
+            // แสดงส่วนผลลัพธ์
+            resultsSection.classList.remove('hidden');
+            resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        async function copyToClipboard(text, button) {
+            try {
+                await navigator.clipboard.writeText(text);
+                
+                // เปลี่ยนสถานะปุ่ม
+                const originalText = button.innerHTML;
+                button.innerHTML = '✅ Copied!';
+                button.classList.add('copied');
+                
+                // รีเซ็ตหลัง 2 วินาที
+                setTimeout(() => {
+                    button.innerHTML = originalText;
+                    button.classList.remove('copied');
+                }, 2000);
+                
+            } catch (err) {
+                // Fallback สำหรับ browser ที่ไม่รддержรอง clipboard API
+                const textArea = document.createElement('textarea');
+                textArea.value = text;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                
+                button.innerHTML = '✅ Copied!';
+                button.classList.add('copied');
+                
+                setTimeout(() => {
+                    button.innerHTML = '📋 Copy';
+                    button.classList.remove('copied');
+                }, 2000);
+            }
+        }
+
+        // เพิ่ม Enter key support
+        document.getElementById('productInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                generateNames();
+            }
+        });
+
+        // Focus input เมื่อโหลดหน้า
+        window.addEventListener('load', function() {
+            document.getElementById('productInput').focus();
+        });
+    </script>
+</body>
+</html>
