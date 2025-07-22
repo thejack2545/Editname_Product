@@ -48,6 +48,54 @@
             font-size: 1.1em;
         }
 
+        .quick-copy-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 15px;
+            border: 2px solid #667eea;
+        }
+
+        .quick-copy-title {
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .quick-copy-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+        }
+
+        .quick-copy-item {
+            background: white;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            padding: 12px 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            color: #333;
+            user-select: none;
+        }
+
+        .quick-copy-item:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(102, 126, 234, 0.2);
+            background: #f8f9ff;
+        }
+
+        .quick-copy-item.copied {
+            background: #28a745;
+            color: white;
+            border-color: #28a745;
+        }
+
         .input-section {
             margin-bottom: 30px;
         }
@@ -119,7 +167,7 @@
             border-radius: 12px;
             padding: 20px;
             display: flex;
-            justify-content: between;
+            justify-content: space-between;
             align-items: center;
             transition: all 0.3s ease;
             cursor: pointer;
@@ -206,6 +254,10 @@
             .header h1 {
                 font-size: 2em;
             }
+
+            .quick-copy-grid {
+                grid-template-columns: 1fr;
+            }
             
             .result-item {
                 flex-direction: column;
@@ -227,9 +279,25 @@
             <p>ใส่ชื่อสินค้า แล้วได้ชื่อหลายแบบให้เลือกใช้</p>
         </div>
 
+        <!-- Quick Copy Section -->
+        <div class="quick-copy-section">
+            <div class="quick-copy-title">⚡ คำที่ใช้บ่อย - คลิกเพื่อคัดลอก</div>
+            <div class="quick-copy-grid">
+                <div class="quick-copy-item" onclick="quickCopy('3ds MAX', this)">
+                    🎨 3ds MAX
+                </div>
+                <div class="quick-copy-item" onclick="quickCopy('AutoCAD', this)">
+                    📐 AutoCAD
+                </div>
+                <div class="quick-copy-item" onclick="quickCopy('JPEG', this)">
+                    🖼️ JPEG
+                </div>
+            </div>
+        </div>
+
         <div class="input-section">
             <div class="input-group">
-                <input type="text" id="productInput" placeholder="ใส่ชื่อสินค้า เช่น SCOOP, APPLE, CAR_RACING">
+                <input type="text" id="productInput" placeholder="ใส่ชื่อสินค้า เช่น SCOOP, APPLE, MOLLY_Stool">
             </div>
             <button class="generate-btn" onclick="generateNames()">
                 ✨ สร้างชื่อสินค้า
@@ -255,8 +323,41 @@
             'IMAGE',
             '3D MAX',
             '3D DWG',
-            
         ];
+
+        async function quickCopy(text, element) {
+            try {
+                await navigator.clipboard.writeText(text);
+                
+                // เปลี่ยนสถานะ element
+                const originalText = element.innerHTML;
+                element.innerHTML = '✅ คัดลอกแล้ว!';
+                element.classList.add('copied');
+                
+                // รีเซ็ตหลัง 2 วินาที
+                setTimeout(() => {
+                    element.innerHTML = originalText;
+                    element.classList.remove('copied');
+                }, 2000);
+                
+            } catch (err) {
+                // Fallback สำหรับ browser ที่ไม่รддержรอง clipboard API
+                const textArea = document.createElement('textarea');
+                textArea.value = text;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                
+                element.innerHTML = '✅ คัดลอกแล้ว!';
+                element.classList.add('copied');
+                
+                setTimeout(() => {
+                    element.innerHTML = originalText;
+                    element.classList.remove('copied');
+                }, 2000);
+            }
+        }
 
         function generateNames() {
             const input = document.getElementById('productInput').value.trim();
